@@ -1,3 +1,3 @@
 # MeTTa language
 
-This note covers essential MeTTa language features including **list Methods**, **recursion**, with examples.
+This repo covers essential MeTTa language features including **list Methods**, **recursion**, with examples.
