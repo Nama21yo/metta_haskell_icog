@@ -16,11 +16,8 @@
   (Cons (14 (AND (NOT B) (OR C D)))
   (Cons (17 (OR (NOT (AND A B)) C))
   (
-
     Cons (19 (AND (OR A B) (OR C D)))
-    
     Nil)
-  
   )))))))))))))))
   ))
 
@@ -92,7 +89,7 @@
             )
             (generate_pointers_helper $total-rank $num-to-select $start-point (+ $current-index 1) (append $pointer $result))
     )))
-! (random-float &rng 0 1)
+; ! (random-float &rng 0 1)
 ; ! (generate_pointers (sum_ranks (size_chrom)) 3 (random-float &rng 0 1))
 
 ; sus selection
@@ -107,7 +104,7 @@
     )
 )
 
-; ! (access 0 (ranked_list))
+; ! (access 1 (Cons (1 (AND (NOT A) (OR C D))) (Cons (10 (OR (AND A B) (NOT D))) (Cons (14 (AND (NOT B) (OR C D))) Nil))))
 
 ; access for an expression
  (= (index $idx $expr)
@@ -177,5 +174,5 @@
 ; select 3 chromosomes
 (= (selected_chromosomes) (sus (chromosomes) 3 (random-float &rng 0 1)))
 
-! "Selected Chromosomes"
-! (selected_chromosomes)
+; ! "Selected Chromosomes"
+; ! (selected_chromosomes)
