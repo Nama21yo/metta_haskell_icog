@@ -16,14 +16,11 @@
 (= (prepend $item $expr) (cons-atom $item $expr))
 
 ; append element in a list
-(= (append $item ()) (cons-atom $item ()))
-(= (append $item $expr) 
-   (let* (
-     ($head (car-atom $expr))
-     ($tail (cdr-atom $expr))
-     ($appended-tail (append $item $tail))
-   )
-   (cons-atom $head $appended-tail)))
+(= (append $item ()) 
+   (cons-atom $item ()))
+(= (append $item $expr)
+   (cons-atom (car-atom $expr) 
+              (append $item (cdr-atom $expr))))
 
 
 ; accessing element by index
@@ -37,6 +34,7 @@
     )
 )
 
+! ()
 
 ; insert item in specfic index
 
@@ -52,6 +50,24 @@
         (cons-atom $head (insert (- $idx 1) $item $tail))
     ))
 )
+;; the problem with the above implementation has sth to do with how cons-atom works
+;; if you are looking to concatenate an atom and an expression the second argument must be an actual argument or a reference to an argument
+;; not a function call that returns an expression
+;; so bind the recursive call (insert (- $idx 1) $item $tail) in a variable and call that variable in cons-atom
+;; like this
+(= (insert 0 $item ()) (cons-atom $item ()))
+(= (insert $idx $item $expr)
+    (let*
+        (
+            ($head (car-atom $expr))
+            ($tail (cdr-atom $expr))
+        )
+    (if (== $idx 0)
+        (cons-atom $item $expr)
+        (let  $c (insert (- $idx 1) $item $tail)
+             (cons-atom $head $c)))))
+
+; ! (insert 2 20 (1 2 3))
 
 
 ; delete item in specific index
@@ -70,29 +86,27 @@
         )
     )
 )
+;; the commnet for insert function applies for delete and replace also
+; ! (delete 2 (0 1 2 3))
 
 ; replace by index
 (= (replace $idx $item $expr)
     (if (== $expr ())
         (error "Index out of bounds")
         (if (== $idx 0)
-            (let* (
-                    ($rest (cdr-atom $expr))
-                  )
-                  (cons-atom $item $rest)
-            )
-            (let*
+            (cons-atom $item (cdr-atom $expr))
+            (let* 
                 (
                     ($head (car-atom $expr))
                     ($tail (cdr-atom $expr))
-                    ($c (replace (- $idx 1) $item $tail))
                 )
-                (cons-atom $head $c)
+                (cons-atom $head (replace (- $idx 1) $item $tail))
             )
         )
     )
 )
 
+; ! (replace 2 20 (0 1 2 3))
 ; filter in metta
 (= (is_even $x ) (== (% $x 2) 0))
 ( = (is_odd $x) (not (is_even $x)))
@@ -113,6 +127,7 @@
         )
     )
 )
+; ! (filter is_even (1 2 3 4 5))
 
 ; max element in a lsit
 (= (max $expr)
@@ -133,6 +148,7 @@
     )
 )
 
+! (max (1 2 5 23 1 6 7 ))
 ; min element in a list
 (= (min $expr)
     (let*
@@ -151,6 +167,7 @@
         )
     )
 )
+! (min (1 2 5 23 1 6 7 ))
 
 ; fold right in metta
 (= (foldr $func $init $expr)
@@ -168,6 +185,7 @@
 (= (square_sum $acc $x) (+ (* $x $x) $acc))
 
 ; fold left in metta
+; ! (foldr square_sum 0 (1 2 5 1)) ;; results in 1445 but is should be 31 not 1445
 
 (= (foldl $func $init $expr)
     (if (== $expr ())
@@ -182,6 +200,8 @@
         )
     )
 )
+
+! (foldl square_sum 0 (1 2 5 1)) ;; this appears to work well
 
 ; sort in metta using Insertion Sort
 (= (insertion_sort $item $sorted_expr)
@@ -213,8 +233,10 @@
         )
     )
 )
+
 (= (compare $a $b) (< $a $b))
 
+! (sort (7 1 4 2 -2))
 ; map in metta
 (= (map $func $expr)
      (if (== $expr ())
