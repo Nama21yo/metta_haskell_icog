@@ -2,7 +2,7 @@
 ! (register-module! ../genetic_programming)
 ! (import! &self genetic_programming:stochastic_ranking)
 
-(= (parents) (sus (chromosomes) 1 (random-float &rng 0 1)))
+(= (parents) (sus (chromosomes) 1 (random-float &rng 0 5)))
 ! "Original Selected Chromosome"
 ! (parents)
 
@@ -55,6 +55,6 @@
 (= (mutated_expr) (replace (random_number) (swap1) (expression)))
 ! "Mutated Chromosome"
 !(mutated_expr)
-(= (mutated_list) (Cons ((score) (mutated_expr)) Nil))
+(= (mutated_list) (Cons (mutated_expr) Nil))
 !(mutated_list)
 

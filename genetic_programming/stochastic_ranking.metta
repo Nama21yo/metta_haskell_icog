@@ -18,7 +18,8 @@
   (
     Cons (19 (AND (OR A B) (OR C D)))
     Nil)
-  )))))))))))))))
+  ))))))))))
+  )))))
   ))
 
 (= (get_score $expr) 
@@ -66,10 +67,11 @@
 (= (length Nil) 0) 
 (= (length (Cons $x $xs))
     (+ 1 (length $xs)))
+
 (= (size_chrom) (length (sorted_list)))
 
 (= (sum_ranks $n)
-    (/ (* $n (+ $n 1)) 2) ; n (n + 1) // 2
+    (/ (* $n (+ $n 1)) 2) ; n (n + 1) // 2 will be arthimetic sum
 )
 
 
@@ -84,7 +86,7 @@
    (if (== $current-index $num-to-select)
        $result
        (let* (
-            ($step (/ $total-rank $num-to-select))
+            ($step (/ $total-rank $num-to-select)) 
             ($pointer (+ $start-point (* $current-index $step)))
             )
             (generate_pointers_helper $total-rank $num-to-select $start-point (+ $current-index 1) (append $pointer $result))
@@ -94,7 +96,6 @@
 
 ; sus selection
 
-
 ; access for a  list
 (= (access 0 Nil) Nil)
 (= (access $idx (Cons $elem $list)) 
@@ -103,8 +104,6 @@
         $elem
     )
 )
-
-; ! (access 1 (Cons (1 (AND (NOT A) (OR C D))) (Cons (10 (OR (AND A B) (NOT D))) (Cons (14 (AND (NOT B) (OR C D))) Nil))))
 
 ; access for an expression
  (= (index $idx $expr)
