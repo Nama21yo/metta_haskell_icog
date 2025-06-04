@@ -55,3 +55,43 @@
 
 !(match &smith-family $x $x)
 ; 
+
+; because (get-space) will create a brand new space each time.
+
+; One workaround for this issue in a functional programming style is to 
+; wrap the whole program into a function, 
+(= (main $space)
+   (let () (add-atom $space (Parent Bob Ann))
+     (match $space (Parent $x $y) ($x $y))
+   )
+)
+! (main (new-space)) ; (Bob Ann)
+
+
+; imports in metta
+; people_kb.metta
+(Female Pam)
+(Male Tom)
+(Male Bob)
+(Female Liz)
+(Female Pat)
+(Female Ann)
+(Male Jim)
+(Parent Tom Bob)
+(Parent Pam Bob)
+(Parent Tom Liz)
+(Parent Bob Ann)
+(Parent Bob Pat)
+(Parent Pat Jim)
+
+; main.metta
+! (import! &people people_kb)
+(= (get-sister $x)
+   (match &people
+     (, (Parent $y $x)
+        (Parent $y $z)
+        (Female $z))
+     $z
+   )
+)
+! (get-sister Bob)
