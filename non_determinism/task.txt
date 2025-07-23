@@ -1,0 +1,3 @@
+Implement non-deterministic functions: map, filter, findAndRemove, findAndReplace, isMember, and a non-deterministic function that generates cartesian product of a set with itself n times based on the given on input.
+Develop a non deterministic path-finding function that determines a route between two points in a MeTTa graph.
+Create recursive functions: repeat, zip, zipWith, and generate.
