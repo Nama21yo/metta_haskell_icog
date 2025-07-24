@@ -3,7 +3,8 @@
    (superpose ($elem (repeat $elem))))
 
 
-(: repeatN (-> Atom Number Expression))
+(= (add $x) (+ 1 $x))
+; (: repeatN (-> Atom Number Expression))
 ; (= (repeatN $elem 0) ())
 (= (repeatN $elem $n)
    (if (> $n 0)
@@ -14,4 +15,5 @@
 ; !(repeat x)  ; infinite
 
 !(repeatN x 5)
+!(repeatN (add 2) 6)
 ;;  (x x x x x)

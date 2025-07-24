@@ -1,6 +1,7 @@
 (= (zip $list1 $list2)
      (if (and (> (size-atom $list1) 0) (> (size-atom $list2) 0))
        (let* (
+
                     (($first1 $rest1) (decons-atom $list1))
                     (($first2 $rest2) (decons-atom $list2))
                     ($pair ($first1 $first2))
@@ -15,7 +16,7 @@
 ;           ($elem2 (superpose $list2)))
 ;      ($elem1 $elem2)))
 
-!  (zip (1 2) (a b))
+!  (zip (1 2) (a b c))
 ; !(collapse (zipNonDet (1 2) (a b)))
 
 

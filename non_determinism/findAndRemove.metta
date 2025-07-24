@@ -1,4 +1,4 @@
-; (: findAndRemove (-> $a Expression Expression))
+(: findAndRemove (-> Number Expression Expression))
 (= (findAndRemove $target $list)
    (collapse
       ; let $current (superpose $list) 

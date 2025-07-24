@@ -3,6 +3,7 @@
 (AddisAbaba 275 Hawassa)
 (AddisAbaba 565 BahirDar)
 (Adama 350 DireDawa)
+(DireDawa 350 Adama)
 (DireDawa 75 Harar)
 (Harar 480 Dessie)
 (Dessie 380 Mekelle)
