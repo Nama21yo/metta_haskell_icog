@@ -75,14 +75,14 @@
 ;; !(match &self (Male $x) $x)
 ;; !(collapse (match &self (Male $x) $x))
 ;; !(let $a (match &self (AddisAbaba $w $d) $w) (double $a))
-;; !(collapse (match &self (AddisAbaba $w $d) (AddisAbaba is $w Kms from $d)))
+; !(collapse (match &self (AddisAbaba $w $d) (AddisAbaba is $w Kms from $d)))
 
 ;; superpose
 ;; !(superpose (A B C D E))
 ;; !((superpose (A B C D E)) (superpose (A B C D E)))
 ;; !(+ (superpose (A B C)) (superpose (A B C)))
-;; !(+ (superpose (1 2 3)) (superpose (1 2 3)))
-;; !((superpose (1 2 3)) (superpose (1 2 3)))
+!(+ (superpose (1 2 3)) (superpose (1 2 3)))
+!((superpose (1 2 3)) (superpose (1 2 3)))
 
 ;; empty
 ;; !(empty)
