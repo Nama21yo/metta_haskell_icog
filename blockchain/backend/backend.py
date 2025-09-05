@@ -310,12 +310,12 @@ async def register_creator(creator_data: CreatorRequest):
         if result.get("success"):
             creator_id = result["result"]
             
-            # Log the registration
-            await log_transaction("creator_registration", {
-                "creator_id": creator_id,
-                "wallet": creator_data.wallet_address,
-                "name": creator_data.name
-            })
+            # # Log the registration
+            # await log_transaction("creator_registration", {
+            #     "creator_id": creator_id,
+            #     "wallet": creator_data.wallet_address,
+            #     "name": creator_data.name
+            # })
             
             return create_response(
                 True,
@@ -387,13 +387,14 @@ async def create_asset(asset_data: AssetRequest):
     """Create a new digital asset"""
     try:
         # First, get or resolve creator ID from wallet address
-        creator_query = f'!(getCreatorByWallet "{asset_data.creator_wallet}")'
+        creator_query = f'!(getCreator {asset_data.creator_id})'
         creator_result = metta_kb.execute_query(creator_query)
+        print("Creator Result", creator_result)
         
         if not creator_result.get("success"):
             raise HTTPException(status_code=400, detail="Creator wallet not found")
         
-        creator_id = creator_result["result"]
+        creator_id = creator_result["result"][0][1]
         
         # Create asset
         query_args = metta_kb.python_to_metta_args(
@@ -405,6 +406,8 @@ async def create_asset(asset_data: AssetRequest):
             asset_data.price,
             asset_data.royalty_percentage
         )
+
+        print("Query Result", query_args)
         query = f"!(createAsset {query_args})"
         
         result = metta_kb.execute_query(query)
@@ -413,13 +416,13 @@ async def create_asset(asset_data: AssetRequest):
             asset_id = result["result"]
             
             # Log asset creation
-            await log_transaction("asset_creation", {
-                "asset_id": asset_id,
-                "creator_id": creator_id,
-                "title": asset_data.title,
-                "type": asset_data.asset_type,
-                "price": asset_data.price
-            })
+            # await log_transaction("asset_creation", {
+            #     "asset_id": asset_id,
+            #     "creator_id": creator_id,
+            #     "title": asset_data.title,
+            #     "type": asset_data.asset_type,
+            #     "price": asset_data.price
+            # })
             
             return create_response(
                 True,
@@ -492,20 +495,23 @@ async def purchase_asset(purchase_data: PurchaseRequest):
     """Process asset purchase with royalty distribution"""
     try:
         # Get buyer ID from wallet
+        print("Purchase data", purchase_data)
         buyer_query = f'!(getCreatorByWallet "{purchase_data.buyer_wallet}")'
         buyer_result = metta_kb.execute_query(buyer_query)
+        print("Buyer Output", buyer_result)
         
-        if not buyer_result.get("success"):
-            # Register buyer as creator if not exists
-            register_query_args = metta_kb.python_to_metta_args(
-                f"User_{purchase_data.buyer_wallet[:8]}",
-                f"{purchase_data.buyer_wallet}@marketplace.local",
-                purchase_data.buyer_wallet
-            )
-            register_query = f"!(registerCreator {register_query_args})"
-            buyer_result = metta_kb.execute_query(register_query)
+        # if not buyer_result.get("success"):
+        #     # Register buyer as creator if not exists
+        #     register_query_args = metta_kb.python_to_metta_args(
+        #         f"User_{purchase_data.buyer_wallet[:8]}",
+        #         f"{purchase_data.buyer_wallet}@marketplace.local",
+        #         purchase_data.buyer_wallet
+        #     )
+        #     register_query = f"!(registerCreator {register_query_args})"
+        #     buyer_result = metta_kb.execute_query(register_query)
         
-        buyer_id = buyer_result["result"]
+        buyer_id = buyer_result["result"][0][1]
+        print("Buyer result", buyer_id)
         
         # Process purchase
         query_args = metta_kb.python_to_metta_args(
@@ -522,12 +528,12 @@ async def purchase_asset(purchase_data: PurchaseRequest):
             purchase_result = result["result"]
             
             # Log purchase transaction
-            await log_transaction("purchase", {
-                "buyer_id": buyer_id,
-                "asset_id": purchase_data.asset_id,
-                "amount": purchase_data.payment_amount,
-                "quantity": purchase_data.quantity
-            })
+            # await log_transaction("purchase", {
+            #     "buyer_id": buyer_id,
+            #     "asset_id": purchase_data.asset_id,
+            #     "amount": purchase_data.payment_amount,
+            #     "quantity": purchase_data.quantity
+            # })
             
             return create_response(
                 True,

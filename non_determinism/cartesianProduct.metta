@@ -20,3 +20,5 @@
 !(cartesianProduct (1 2) 3)
 
 !(cartesianProduct (1 2) 4)
+
+!(cartesianProduct (0 1) 2 )

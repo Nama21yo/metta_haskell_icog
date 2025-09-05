@@ -72,7 +72,6 @@ const Marketplace = () => {
 
     setLoading(true);
     try {
-      // Process purchase through backend
       const response = await transactionAPI.purchase({
         buyer_wallet: account,
         asset_id: selectedAsset.id || selectedAsset.asset_id,
@@ -83,7 +82,6 @@ const Marketplace = () => {
       if (response.success) {
         showSnackbar("Purchase processed successfully!", "success");
 
-        // Execute blockchain transaction
         if (connected) {
           try {
             const txHash = await purchaseAssetOnBlockchain(
@@ -155,6 +153,11 @@ const Marketplace = () => {
     setTransferDialogOpen(true);
   };
 
+  // 🔹 Deduplicate assets by title (index 4)
+  const uniqueAssets = Array.from(
+    new Map(assets.map((asset) => [asset[4], asset])).values()
+  );
+
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" fontWeight="bold" sx={{ mb: 4 }}>
@@ -186,8 +189,8 @@ const Marketplace = () => {
 
       {tabValue === 0 && (
         <Grid container spacing={3}>
-          {assets.map((asset, index) => (
-            <Grid item xs={12} sm={6} md={4} key={asset.id || index}>
+          {uniqueAssets.map((asset, index) => (
+            <Grid item xs={12} sm={6} md={4} key={asset[1] || index}>
               <Card
                 sx={{
                   height: "100%",
@@ -197,20 +200,20 @@ const Marketplace = () => {
               >
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    {asset.title || "Untitled Asset"}
+                    {asset[4] || "Untitled Asset"}
                   </Typography>
 
                   <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
                     <Chip
-                      label={asset.asset_type || asset.type}
+                      label={asset[3] || asset.asset_type || asset.type}
                       size="small"
                       color="primary"
                     />
-                    <Chip
-                      label={`${asset.royalty_percentage || 5}% royalty`}
+                    {/* <Chip
+                      label={`${asset[9] || asset.royalty_percentage || 5}% royalty`}
                       size="small"
                       variant="outlined"
-                    />
+                    /> */}
                   </Box>
 
                   <Typography
@@ -218,11 +221,11 @@ const Marketplace = () => {
                     color="text.secondary"
                     sx={{ mb: 2 }}
                   >
-                    {asset.description || "No description available"}
+                    {asset[5] || asset.description || "No description available"}
                   </Typography>
 
                   <Typography variant="h5" color="primary" fontWeight="bold">
-                    {asset.price || asset.price_eth || 0} ETH
+                    {asset[8] || asset.price || asset.price_eth || 0} ETH
                   </Typography>
                 </CardContent>
 
@@ -286,10 +289,10 @@ const Marketplace = () => {
           {selectedAsset && (
             <Box>
               <Typography variant="h6" gutterBottom>
-                {selectedAsset.title}
+                {selectedAsset[4] || selectedAsset.title}
               </Typography>
               <Typography variant="body2" color="text.secondary" gutterBottom>
-                {selectedAsset.description}
+                {selectedAsset[5] || selectedAsset.description}
               </Typography>
 
               <Box sx={{ my: 2 }}>
@@ -303,7 +306,9 @@ const Marketplace = () => {
                       ...prev,
                       quantity: parseInt(e.target.value),
                       payment_amount:
-                        (selectedAsset.price || 0) * parseInt(e.target.value),
+                        (selectedAsset[8] ||
+                          selectedAsset.price ||
+                          0) * parseInt(e.target.value),
                     }))
                   }
                   inputProps={{ min: 1 }}
@@ -326,8 +331,8 @@ const Marketplace = () => {
               </Box>
 
               <Typography variant="body2" color="text.secondary">
-                Royalty: {selectedAsset.royalty_percentage || 5}% will go to
-                creator
+                Royalty: {selectedAsset[9] || selectedAsset.royalty_percentage || 5}
+                % will go to creator
               </Typography>
             </Box>
           )}
@@ -356,7 +361,7 @@ const Marketplace = () => {
           {selectedAsset && (
             <Box>
               <Typography variant="h6" gutterBottom>
-                {selectedAsset.title}
+                {selectedAsset[4] || selectedAsset.title}
               </Typography>
 
               <TextField
@@ -420,4 +425,3 @@ const Marketplace = () => {
 };
 
 export default Marketplace;
-//

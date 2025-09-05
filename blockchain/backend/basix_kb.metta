@@ -37,8 +37,14 @@
 ;; Purpose: Retrieve creator information by ID
 (: getCreator (-> Number Any))
 (= (getCreator $creatorId)
-    (match &creators (creator $creatorId $name $email $wallet) 
+    (match &creators (creator $creatorId $name $ $wallet) 
         (creatorInfo $creatorId $name $email $wallet))
+)
+email
+(= (getCreatorByWallet $walletAddress)
+      (match &creators (creator $creatorId $name $email $walletAddress) 
+        (creatorInfo $creatorId $name $email $walletAddress)
+     )
 )
 
 ;; Function: updateCreatorReputation
@@ -62,7 +68,7 @@
 
 ;; Function: createAsset
 ;; Purpose: Create a new digital asset (NFT, video, ticket, etc.)
-(: createAsset (-> Number String String String String Number Number Any))
+; (: createAsset (-> Number String String String String Number Number Any))
 (= (createAsset $creatorId $assetType $title $description $metadataUri $price $royaltyPercentage)
     (let* 
         (
@@ -81,16 +87,31 @@
 
 ;; Function: getAsset
 ;; Purpose: Retrieve asset information
-(: getAsset (-> Number Any))
+; (: getAsset (-> Number Any))
 (= (getAsset $assetId)
     (let* 
         (
             ($assetInfo (match &assets (asset $assetId $creatorId $type $title $desc $uri) 
-                (assetDetails $assetId $creatorId $type $title $desc $uri)))
+                (assetDetails $assetId $creatorId $type $title $desc $uri))
+            )
             ($pricing (match &assets (assetPricing $assetId $price $royalty) 
                 (pricingInfo $price $royalty)))
         )
         (assetComplete $assetInfo $pricing)
+    )
+)
+
+(= (getMarketplaceAssets)
+   (let* 
+        (
+            ($assetInfo (match &assets (asset $assetId $creatorId $type $title $desc $uri) 
+                (assetDetails $assetId $creatorId $type $title $desc $uri))
+            )
+            ($pricing (match &assets (assetPricing $assetId $price $royalty) 
+                (pricingInfo $price $royalty)))
+            
+        )
+        (union-atom $assetInfo $pricing)
     )
 )
 
@@ -115,11 +136,11 @@
 
 ;; Function: getOwnership
 ;; Purpose: Get ownership percentage for a user and asset
-(: getOwnership (-> Number Number Number))
+; (: getOwnership (-> Number Number Number))
 (= (getOwnership $userId $assetId)
     (let* 
         (
-            ($ownership (match &ownership (owns $userId $assetId $percentage) $percentage))
+            ($ownership (collapse (match &ownership (owns $userId $assetId $percentage) $percentage)))
         )
         (if (== $ownership ())
             0
@@ -177,7 +198,7 @@
 
 ;; Function: purchaseAsset
 ;; Purpose: Handle asset purchase with automatic royalty distribution
-(: purchaseAsset (-> Number Number Number Number Any))
+; (: purchaseAsset (-> Number Number Number Number Any))
 (= (purchaseAsset $buyerId $assetId $price $quantity)
     (let* 
         (
@@ -205,7 +226,7 @@
                 )
                 (purchaseSuccess $txId $royaltyAmount $creatorPayment)
             )
-            (purchaseFailure "Insufficient payment")
+            (Error $price "Insufficient payment")
         )
     )
 )
@@ -287,15 +308,15 @@
 ;; Purpose: Get creators sorted by reputation
 (: getTopCreators (-> Any))
 (= (getTopCreators)
-    (union
-        (
-            match &creators (creatorProfile $creatorId $status $created (reputation $rep))
-            (creatorRank $creatorId $rep)
-        )
+    ; (union
+        ; (
+        ;     match &creators (creatorProfile $creatorId $status $created (reputation $rep))
+        ;     (creatorRank $creatorId $rep)
+        ; )
         (match &creators (creator $creatorId $name $email $wallet) 
                 (creatorInfo $creatorId $name $email $wallet)
         )
-    )
+    ; )
 )
 
 ;; Function: getMarketplaceStats

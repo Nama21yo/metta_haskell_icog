@@ -66,7 +66,7 @@ const Creators = () => {
         setCreators(response.data?.creators || []);
       }
     } catch (error) {
-      showSnackbar("Failed to fetch creators", "error");
+      showSnackbar("Failed to fetch creators", error.message);
     } finally {
       setLoading(false);
     }
@@ -109,7 +109,7 @@ const Creators = () => {
           } catch (blockchainError) {
             showSnackbar(
               "Backend registration successful, but blockchain registration failed",
-              "warning"
+                blockchainError.message
             );
           }
         }
@@ -175,9 +175,9 @@ const Creators = () => {
                   </Avatar>
                   <Box>
                     <Typography variant="h6" fontWeight="bold">
-                      {creator.name || "Unknown Creator"}
+                      {creator[2] || "Unknown Creator"}
                     </Typography>
-                    <Chip label={`ID: ${creator.id}`} size="small" />
+                    <Chip label={`ID: ${creator[1]}`} size="small" />
                   </Box>
                 </Box>
 
@@ -186,7 +186,7 @@ const Creators = () => {
                     sx={{ mr: 1, fontSize: 16, color: "text.secondary" }}
                   />
                   <Typography variant="body2" color="text.secondary">
-                    {creator.email || "No email"}
+                    {creator[3] || "No email"}
                   </Typography>
                 </Box>
 
@@ -195,11 +195,11 @@ const Creators = () => {
                     sx={{ mr: 1, fontSize: 16, color: "text.secondary" }}
                   />
                   <Typography variant="body2" color="text.secondary">
-                    {creator.wallet_address
-                      ? `${creator.wallet_address.slice(
+                    {creator[4]
+                      ? `${creator[4].slice(
                           0,
                           6
-                        )}...${creator.wallet_address.slice(-4)}`
+                        )}...${creator[4].slice(-4)}`
                       : "No wallet"}
                   </Typography>
                 </Box>

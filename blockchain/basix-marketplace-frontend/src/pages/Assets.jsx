@@ -4,7 +4,6 @@ import {
   Container,
   Typography,
   Box,
-  Paper,
   Grid,
   TextField,
   Button,
@@ -49,6 +48,7 @@ const Assets = () => {
     severity: "info",
   });
   const [formData, setFormData] = useState({
+    creator_id: 1001,
     creator_wallet: "",
     asset_type: "",
     title: "",
@@ -99,7 +99,6 @@ const Assets = () => {
 
     setLoading(true);
     try {
-      // Create asset in backend/MeTTa
       const response = await assetAPI.create({
         ...formData,
         price: parseFloat(formData.price),
@@ -111,7 +110,6 @@ const Assets = () => {
           "success"
         );
 
-        // Optionally create on blockchain
         if (connected && account) {
           try {
             const txHash = await createAssetOnBlockchain(formData);
@@ -169,16 +167,21 @@ const Assets = () => {
           `Dynamic pricing result: ${response.data.pricing_result}`,
           "success"
         );
-        fetchAssets(); // Refresh to show updated prices
+        fetchAssets();
       }
     } catch (error) {
-      showSnackbar("Dynamic pricing failed", "error");
+      showSnackbar("Dynamic pricing failed", error.message);
     }
   };
 
   const showSnackbar = (message, severity) => {
     setSnackbar({ open: true, message, severity });
   };
+
+  // 🔹 Deduplicate assets by title (index 4)
+  const uniqueAssets = Array.from(
+    new Map(assets.map((asset) => [asset[4], asset])).values()
+  );
 
   return (
     <Container maxWidth="lg">
@@ -216,18 +219,18 @@ const Assets = () => {
       )}
 
       <Grid container spacing={3}>
-        {assets.map((asset, index) => (
-          <Grid item xs={12} sm={6} md={4} key={asset.id || index}>
+        {uniqueAssets.map((asset, index) => (
+          <Grid item xs={12} sm={6} md={4} key={asset[1] || index}>
             <Card sx={{ height: "100%" }}>
               <CardContent>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                   <Palette sx={{ mr: 2, color: "#667eea" }} />
                   <Box>
                     <Typography variant="h6" fontWeight="bold">
-                      {asset.title || "Untitled Asset"}
+                      {asset[4] || "Untitled Asset"}
                     </Typography>
                     <Chip
-                      label={asset.asset_type || asset.type || "Unknown"}
+                      label={asset[3] || asset.type || "Unknown"}
                       size="small"
                       color="primary"
                     />
@@ -239,7 +242,7 @@ const Assets = () => {
                   color="text.secondary"
                   sx={{ mb: 2 }}
                 >
-                  {asset.description || "No description available"}
+                  {asset[5] || "No description available"}
                 </Typography>
 
                 <Box
@@ -250,17 +253,12 @@ const Assets = () => {
                   }}
                 >
                   <Typography variant="h6" color="primary" fontWeight="bold">
-                    {asset.price || asset.price_eth || 0} ETH
+                    {asset[8] || asset.price_eth || 0} ETH
                   </Typography>
-                  <Chip
-                    label={`${asset.royalty_percentage || 5}% royalty`}
-                    size="small"
-                    variant="outlined"
-                  />
                 </Box>
 
                 <Typography variant="caption" color="text.secondary">
-                  Asset ID: {asset.id || asset.asset_id || "Unknown"}
+                  Asset ID: {asset[1] || asset.asset_id || "Unknown"}
                 </Typography>
               </CardContent>
 
@@ -278,7 +276,7 @@ const Assets = () => {
                     size="small"
                     startIcon={<SmartToy />}
                     onClick={() =>
-                      handleAutoApprove(asset.id || asset.asset_id)
+                      handleAutoApprove(asset[1] || asset.asset_id)
                     }
                     fullWidth
                   >
@@ -288,7 +286,7 @@ const Assets = () => {
                     size="small"
                     startIcon={<PriceChange />}
                     onClick={() =>
-                      handleDynamicPricing(asset.id || asset.asset_id)
+                      handleDynamicPricing(asset[1] || asset.asset_id)
                     }
                     fullWidth
                   >
