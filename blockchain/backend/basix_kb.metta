@@ -7,7 +7,7 @@
 !(bind! &marketplace (new-space))
 !(bind! &ownership (new-space))
 !(bind! &transactions (new-space))
-!(bind! &funding (new-space))
+; !(bind! &funding (new-space))
 
 ;; State management for system counters
 !(bind! creatorIdCounter (new-state 1000))
