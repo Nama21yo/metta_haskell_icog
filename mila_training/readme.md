@@ -67,6 +67,8 @@ celery -A prediction worker --beat --loglevel=info
 * Swagger API Docs: [http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
 * ReDoc API Docs: [http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/)
 
+<img width="1920" height="1276" alt="image" src="https://github.com/user-attachments/assets/a9c2a4ad-2673-405e-a2d9-f92395ed9a7b" />
+
 ## API Testing
 
 * **Get model info**
