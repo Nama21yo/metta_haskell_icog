@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+        
+        .form-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+        
+        .result-section {
+            padding: 40px;
+            background: white;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .prediction-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .prediction-result {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .risk-level {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .probability-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .probability-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .probability-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .model-info {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+        }
+        
+        .model-info h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .info-value {
+            color: #27ae60;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .api-links {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f1f3f4;
+            border-radius: 10px;
+        }
+        
+        .api-links h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .api-links a {
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            padding: 8px 15px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+        
+        .api-links a:hover {
+            background: #2980b9;
+        }
+        
+        .help-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-section,
+            .result-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Diabetes Prediction System</h1>
+            <p>ML-based diabetes risk assessment with automated model retraining</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <h2 class="section-title">Patient Information</h2>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="pregnancies">Number of Pregnancies:</label>
+                        <input type="number" name="pregnancies" id="pregnancies" required min="0" max="20">
+                        <div class="help-text">Number of times pregnant</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="glucose">Glucose Level:</label>
+                        <input type="number" name="glucose" id="glucose" required min="0" max="300" step="0.1">
+                        <div class="help-text">Plasma glucose concentration (mg/dL)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="blood_pressure">Blood Pressure:</label>
+                        <input type="number" name="blood_pressure" id="blood_pressure" required min="0" max="200" step="0.1">
+                        <div class="help-text">Diastolic blood pressure (mm Hg)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="skin_thickness">Skin Thickness:</label>
+                        <input type="number" name="skin_thickness" id="skin_thickness" required min="0" max="100" step="0.1">
+                        <div class="help-text">Triceps skin fold thickness (mm)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="insulin">Insulin Level:</label>
+                        <input type="number" name="insulin" id="insulin" required min="0" max="900" step="0.1">
+                        <div class="help-text">2-Hour serum insulin (mu U/ml)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bmi">BMI:</label>
+                        <input type="number" name="bmi" id="bmi" required min="10" max="70" step="0.1">
+                        <div class="help-text">Body mass index (kg/m²)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="diabetes_pedigree">Diabetes Pedigree Function:</label>
+                        <input type="number" name="diabetes_pedigree" id="diabetes_pedigree" required min="0" max="3" step="0.001">
+                        <div class="help-text">Family history factor</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" name="age" id="age" required min="18" max="120">
+                        <div class="help-text">Age in years</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">🔍 Predict Diabetes Risk</button>
+                </form>
+            </div>
+            
+            <div class="result-section">
+                <h2 class="section-title">Prediction Results</h2>
+                
+                {% if error_message %}
+                    <div class="error-message">
+                        <strong>Error:</strong> {{ error_message }}
+                    </div>
+                {% endif %}
+                
+                {% if prediction_result %}
+                    <div class="prediction-card">
+                        <div class="prediction-result" 
+                            style="color: {% if prediction_result.prediction == 1 %}red{% else %}green{% endif %};">
+                            {% if prediction_result.prediction == 1 %}
+                                Diabetes Risk Detected
+                            {% else %}
+                                Low Diabetes Risk
+                            {% endif %}
+                        </div>
+
+                        <div class="risk-level">Risk Level: {{ prediction_result.risk_level }}</div>
+                        
+                        <div class="probability-grid">
+                            <div class="probability-item">
+                                <span class="probability-value">{{ prediction_result.probability_no_diabetes|floatformat:3 }}</span>
+                                <div>No Diabetes</div>
+                            </div>
+                            <div class="probability-item">
+                                <span class="probability-value">{{ prediction_result.probability_diabetes|floatformat:3 }}</span>
+                                <div>Diabetes</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                {% else %}
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">📊</div>
+                        <p>Enter patient information and click predict to see diabetes risk assessment results.</p>
+                    </div>
+                {% endif %}
+                
+                <!-- Model Information -->
+                <div class="model-info">
+                    <h3>🤖 Model Information</h3>
+                    <div class="info-item">
+                        <span class="info-label">Model Status:</span>
+                        <span class="status-badge {% if model_info.model_trained %}status-active{% else %}status-inactive{% endif %}">
+                            {% if model_info.model_trained %}Active{% else %}Not Trained{% endif %}
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Dataset Size:</span>
+                        <span class="info-value">{{ model_info.dataset_size }} records</span>
+                    </div>
+                    {% if model_info.last_modified %}
+                    <div class="info-item">
+                        <span class="info-label">Last Updated:</span>
+                        <span class="info-value">{{ model_info.last_modified|slice:":19" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- API Documentation Links -->
+                <div class="api-links">
+                    <h3>API Documentation</h3>
+                    <a href="/swagger/" target="_blank">Swagger UI</a>
+                    <a href="/redoc/" target="_blank">ReDoc</a>
+                    <a href="/predict/api/model-info/" target="_blank">Model Info API</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
