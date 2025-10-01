@@ -19,7 +19,7 @@ app.conf.beat_schedule = {
     'retrain-model-every-minute': {  # For testing - change to 24 hours in production
         'task': 'predict.tasks.retrain_diabetes_model',
         'schedule': 60.0,  # Every 60 seconds for testing
-        # For production, use: 'schedule': 24 * 60 * 60.0,  # 24 hours
+        # we can use: 'schedule': 24 * 60 * 60.0,  # 24 hours
     },
 }
 

@@ -52,3 +52,51 @@ Model trained. Accuracy: 0.7541. Training set size: 1218
 Model retraining completed successfully
 New dataset size: 1218
 Model accuracy: 0.7541
+Starting scheduled model retraining...
+(Scheduler) Appended 50 records. New dataset size: 1268
+Model trained. Accuracy: 0.7362. Training set size: 1268
+Model retraining completed successfully
+New dataset size: 1268
+Model accuracy: 0.7362
+Starting scheduled model retraining...
+(Scheduler) Appended 50 records. New dataset size: 1318
+Model trained. Accuracy: 0.7538. Training set size: 1318
+Model retraining completed successfully
+New dataset size: 1318
+Model accuracy: 0.7538
+Starting scheduled model retraining...
+(Scheduler) Appended 50 records. New dataset size: 1368
+Model trained. Accuracy: 0.7555. Training set size: 1368
+Model retraining completed successfully
+New dataset size: 1368
+Model accuracy: 0.7555
+Starting scheduled model retraining...
+(Scheduler) Appended 50 records. New dataset size: 1418
+Model trained. Accuracy: 0.7535. Training set size: 1418
+Model retraining completed successfully
+New dataset size: 1418
+Model accuracy: 0.7535
+Starting scheduled model retraining...
+(Scheduler) Appended 50 records. New dataset size: 1468
+Model trained. Accuracy: 0.7653. Training set size: 1468
+Model retraining completed successfully
+New dataset size: 1468
+Model accuracy: 0.7653
+Starting scheduled model retraining...
+(Scheduler) Appended 50 records. New dataset size: 1518
+Model trained. Accuracy: 0.7664. Training set size: 1518
+Model retraining completed successfully
+New dataset size: 1518
+Model accuracy: 0.7664
+Starting scheduled model retraining...
+(Scheduler) Appended 50 records. New dataset size: 1568
+Model trained. Accuracy: 0.7548. Training set size: 1568
+Model retraining completed successfully
+New dataset size: 1568
+Model accuracy: 0.7548
+Starting scheduled model retraining...
+(Scheduler) Appended 50 records. New dataset size: 1618
+Model trained. Accuracy: 0.7562. Training set size: 1618
+Model retraining completed successfully
+New dataset size: 1618
+Model accuracy: 0.7562
