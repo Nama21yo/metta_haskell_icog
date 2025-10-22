@@ -16,12 +16,15 @@
             (
                 ($currentSub (subSet $set (- $n 1))) ;; using head recursion
                 ($newSubset (collapse
-                            (let $subset (superpose $currentSub)
-                                (let $elem (superpose $set)
-                                    (if (not (isMember $elem $subset))
-                                        (cons-atom $elem $subset)
-                                        (empty)
-                                    )
+                            (let*
+                                (
+
+                                    ($subset (superpose $currentSub))
+                                    ($elem (superpose $set))
+                                ) 
+                                (if (not (isMember $elem $subset))
+                                    (cons-atom $elem $subset)
+                                    (empty)
                                 )
                             )
                     )
@@ -37,6 +40,6 @@
 
 !(subSet (0 1 2) 2)
 !(subSet (1 2 3) 1)
-!(subSet (A B C D) 3)
+; !(subSet (A B C D) 3)
 
 ; 
