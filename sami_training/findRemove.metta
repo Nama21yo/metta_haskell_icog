@@ -1,4 +1,4 @@
-
+(: findRemove (-> Number Expression Expression))
 (= (findRemove $target $list)
     (let $current (superpose $list)
         (if (== $current $target)
