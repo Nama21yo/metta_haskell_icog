@@ -1,28 +1,4 @@
-; (: subSet (-> Expression Number Expression))
-; (= (powerSet $set $n $exact)
-;    (if (== $n 0)
-;        (()) 
-;        (let* (($ps   (powerSet $set (- $n 1) $exact))
-;               ($new  (collapse 
-;                        (let $subset (superpose $ps)
-;                          (let $el (superpose $set)
-;                            (if (not (isMember $el $subset))
-;                                (cons-atom $el $subset)
-;                                (empty)))
-;                         )
-;                     )
-;                 )
-;               ($filteredNew (set $new ()))
-;               ($res  (if (not $exact)
-;                         (union-atom  $filteredNew $ps)
-;                         $filteredNew
-;                     )
-;               )
-;             )
-;              $res
-;         )
-;     )
-; )
+
 (= (isMember $target $list)
     (not (== (collapse 
             (intersection (superpose ($target)) (superpose $list))
@@ -31,6 +7,8 @@
     )
 )
 
+
+(: subSet (-> Expression Number Expression))
 (= (subSet $set $n)
     (if (== $n 0)
         (())
